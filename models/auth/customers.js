@@ -26,7 +26,7 @@ const customerSchema = new mongoose.Schema({
   code:{ type: String },
   address:{ type: String },
   companyAddress:{ type: String },
-  meliCode:{ type: String , unique: true},
+  meliCode:{ type: String},
   activity:{ type: String },
   official:{ type: String },
   status:{ type: String },
