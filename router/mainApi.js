@@ -161,7 +161,7 @@ router.get('/sepidar-customer', async (req,res)=>{
             address:sepidarResult[i].address,
             companyAddress:sepidarResult[i].company_address,
             postalCode:sepidarResult[i].zip_code,
-            phone:sepidarResult[i].tels?sepidarResult[i].tels.tel:"000"
+            phone:(sepidarResult[i].tels&&sepidarResult[i].tels[0])?sepidarResult[i].tels[0].tel:"000"
         }})
         var modified = custResult.modifiedCount
         var matched = custResult.matchedCount
