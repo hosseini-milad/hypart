@@ -162,7 +162,7 @@ router.post('/fetch-product',jsonParser,async (req,res)=>{
         const filterList = catData&&await Filters.find({"category._id":catData._id.toString()})
        
         res.json({filter:productData,brandList:brandList,categoryList:categoryList,
-        brandData:brandData,catData:catData,filterList:filterList})
+        catData:catData,filterList:filterList})
     }
     catch(error){
         res.status(500).json({message: error.message})
