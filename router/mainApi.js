@@ -71,8 +71,11 @@ router.use('/panel/crm',CRMPanelApi)
  })
 router.get('/sepidar-product', async (req,res)=>{
     const url=req.body.url
+    const limit=req.body.limit?req.body.limit:100
+    const offset = req.body.offset?req.body.offset:0
     try{
-        const result = await sepidarFetch("limit=1000","/api/products")
+        const result = await sepidarFetch(`limit=${limit}&offset=${offset}`,
+        "/api/products")
         
         if(result.error||!result.count){
             res.json({error:"error occure",
@@ -129,8 +132,11 @@ router.get('/sepidar-product', async (req,res)=>{
 })
 router.get('/sepidar-customer', async (req,res)=>{
     const url=req.body.url
+    const limit=req.body.limit?req.body.limit:100
+    const offset = req.body.offset?req.body.offset:0
     try{
-        const result = await sepidarFetch("limit=1000","/api/persons")
+        const result = await sepidarFetch(`limit=${limit}&offset=${offset}`,
+        "/api/persons")
  
         if(result.error||!result.count){
             res.json({error:"error occure",
