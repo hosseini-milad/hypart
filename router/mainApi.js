@@ -27,6 +27,7 @@ const bankAccounts = require('../models/product/bankAccounts');
 const updateLog = require('../models/product/updateLog');
 const state = require('../models/main/state');
 const city = require('../models/main/city');
+const category = require('../models/product/category');
 const { ONLINE_URL} = process.env;
  
 router.get('/main', async (req,res)=>{
@@ -125,6 +126,56 @@ router.get('/sepidar-product', async (req,res)=>{
         })
         res.json({sepidar:{new:newProduct,update:updateProduct,notUpdate:notUpdateProduct},
             message:"محصولات بروز شدند"})
+    }
+    catch(error){
+        res.status(500).json({message: error.message})
+    }
+})
+router.get('/sepidar-category', async (req,res)=>{
+    const url=req.body.url
+    const limit=req.body.limit?req.body.limit:100
+    const offset = req.body.offset?req.body.offset:0
+    try{
+        const result = await sepidarFetch(`limit=${limit}&offset=${offset}`,
+        "/api/product_categories")
+        
+        if(result.error||!result.count){
+            res.json({error:"error occure",
+                data:result,message:"خطا در بروزرسانی"})
+            return
+        }
+        var newProduct = [];
+        var updateProduct = 0
+        var notUpdateProduct = 0
+        var sepidarResult = result.results
+        for(var i = 0;i<sepidarResult.length;i++){
+            const productResult = await category.updateOne({
+                mid:sepidarResult[i].mid
+            },{$set:{
+                title:sepidarResult[i].name,
+                parent:sepidarResult[i].parent,
+                date:new Date()}})
+            var modified = productResult.modifiedCount
+            var matched = productResult.matchedCount
+            if(matched){ notUpdateProduct++}
+            if(modified){updateProduct++}
+            if(!matched){
+            const createResult = await category.create({
+                mid:sepidarResult[i].mid,
+                title:sepidarResult[i].name,
+                parent:sepidarResult[i].parent,
+                active:true,
+                date:new Date()})
+                newProduct.push(sepidarResult[i].mid)
+            }
+        }
+        
+        await updateLog.create({
+            updateQuery: "moein-category" ,
+            date:Date.now()
+        })
+        res.json({sepidar:{new:newProduct,update:updateProduct,notUpdate:notUpdateProduct},
+            message:"دسته بندی بروز شدند"})
     }
     catch(error){
         res.status(500).json({message: error.message})
