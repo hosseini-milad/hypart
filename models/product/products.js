@@ -14,6 +14,9 @@ const ProductSchema = new Schema({
     imageUrl: {
         type:String
     },
+    thumbUrl: {
+        type:String
+    },
     perBox:Number,
     prices:Array,
     quantities:Array,
