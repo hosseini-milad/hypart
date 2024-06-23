@@ -211,7 +211,7 @@ router.post('/list-product',jsonParser,async (req,res)=>{
             const typeUnique = [...new Set(productList.map((item) => item.category))];
             
            res.json({filter:products,type:typeUnique,
-            size:productList.length,full:productList,
+            size:productList.length,
             quantity:quantity,price:price})
     }
     catch(error){
