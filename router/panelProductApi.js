@@ -183,7 +183,7 @@ router.post('/list-product',jsonParser,async (req,res)=>{
         const productList = await ProductSchema.aggregate([
             { $match:data.title?{title:new RegExp('.*' + data.title + '.*')}:{}},
             { $match:data.sku?{sku:new RegExp('.*' + data.sku + '.*')}:{}},
-            { $match:data.category?{"category.mid":data.category}:{}},
+            { $match:data.category?{"category.mid":parseInt(data.category)}:{}},
             { $match:data.active?{enTitle:{ $exists: true}}:{}},
             {$lookup:{from : "brands", 
             localField: "brandId", foreignField: "brandCode", as : "brandInfo"}},
